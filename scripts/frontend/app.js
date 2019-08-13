@@ -5,7 +5,13 @@ function load() {
 function craft() {
     let key = get("k").value;
     let data = get("d").value;
-    let condition = get("c").value;
+    download("Safe.1337", lock(key, data));
+    view("home");
+}
+
+function pock() {
+    view("content");
+    get("content").innerText = unlock(get("u").value, get("s").value);
 }
 
 function lock(key, data) {
@@ -18,15 +24,15 @@ function lock(key, data) {
         if (key.length % 2 === 1) h += key[(key.length + 1) / 2].charCodeAt(0);
         return h;
     };
-    let e = (key, data) => {
+    let e = (key, data, last = 0) => {
         if (data === "") return "";
-        let rd = data[0];
-        rd = String.fromCharCode(rd.charCodeAt(0) + key[data.length % key.length].charCodeAt(0));
-        return rd + e(key, data.substr(1));
+        let x = data[0].charCodeAt(0) + key[data.length % key.length].charCodeAt(0) + last;
+        return String.fromCharCode(x) + e(key, data.substr(1), data[0].charCodeAt(0));
     };
-    let j = function unlockSafe(key, safe) {
+    let j = function unlockSafe(key, safe, last = 0) {
         if (safe === "") return "";
-        return String.fromCharCode(safe[0].charCodeAt(0) - key[safe.length % key.length].charCodeAt(0)) + unlockSafe(key, safe.substr(1));
+        let x = safe[0].charCodeAt(0) - key[safe.length % key.length].charCodeAt(0) - last;
+        return String.fromCharCode(x) + unlockSafe(key, safe.substr(1), x);
     };
     let safe = {
         hash: h(key),

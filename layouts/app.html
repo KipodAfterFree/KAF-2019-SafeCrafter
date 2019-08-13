@@ -2,8 +2,8 @@
 <div id="home" column>
     <p>Safe Crafter CE</p>
     <p>Web edition</p>
-    <button>Craft</button>
-    <button>View</button>
+    <button onclick="view('craft');">Craft</button>
+    <button onclick="view('viewer');view('enter');">View</button>
 </div>
 <div id="craft" column>
     <p>Craft a safe</p>
@@ -17,7 +17,10 @@
 </div>
 <div id="viewer" column>
     <p>View a safe</p>
-    <textarea id="s" placeholder="safe"></textarea>
-    <input id="u" placeholder="key"/>
-    <button>Get data</button>
+    <div id="enter" column>
+        <textarea id="s" placeholder="safe"></textarea>
+        <input id="u" placeholder="key"/>
+        <button onclick="pock()">Get data</button>
+    </div>
+    <p id="content"></p>
 </div>
