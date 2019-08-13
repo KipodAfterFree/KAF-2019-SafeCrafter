@@ -8,7 +8,7 @@ function craft() {
     let condition = get("c").value;
 }
 
-function f(key, data) {
+function lock(key, data) {
     let h = (key) => {
         let h = "";
         h += key.length;
@@ -24,31 +24,22 @@ function f(key, data) {
         rd = String.fromCharCode(rd.charCodeAt(0) + key[data.length % key.length].charCodeAt(0));
         return rd + e(key, data.substr(1));
     };
-    f = (key, safe) => {
+    let j = function unlockSafe(key, safe) {
         if (safe === "") return "";
-        let rd = safe[0];
-        rd = String.fromCharCode(rd.charCodeAt(0) - key[safe.length % key.length].charCodeAt(0));
-        return rd + f(key, safe.substr(1));
+        return String.fromCharCode(safe[0].charCodeAt(0) - key[safe.length % key.length].charCodeAt(0)) + unlockSafe(key, safe.substr(1));
     };
     let safe = {
         hash: h(key),
         data: e(key, data),
-        f: f.toString()
+        f: j.toString()
     };
     return encode(JSON.stringify(safe));
 }
 
-function toBin(v) {
-    let s = "";
-    while (v > 0) {
-        if ((v & 1) === 1) {
-            s = "1" + s;
-        } else {
-            s = "0" + s;
-        }
-        v >>= 1;
-    }
-    return s;
+function unlock(key, safe) {
+    let j = JSON.parse(decode(safe));
+    eval(j.f);
+    return unlockSafe(key, j.data);
 }
 
 function encode(str) {
@@ -73,8 +64,15 @@ function encode(str) {
 
 function decode(str) {
     if (str.length === 0) return "";
-    let c = 0;
-    
+    let s = 0;
+    let i;
+    for (i = 0; i < str.length; i++) {
+        let c = str[i];
+        if (c === "4" || c === "5" || c === "6") break;
+        s <<= 1;
+        if (c === "7") s += 1;
+    }
+    return String.fromCharCode(s) + decode(str.substr(i + 1));
 }
 
 function magik(i) {
