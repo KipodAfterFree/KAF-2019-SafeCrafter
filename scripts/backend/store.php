@@ -3,6 +3,7 @@ const SAFE = "777787757888786778788847788887477788774778788847888786777878578887
 ?>
 <html>
 <body>
+<p>The caps-lock key was broken, btw.</p>
 <p>Write access: <?php
     echo "false";
     ?></p>
